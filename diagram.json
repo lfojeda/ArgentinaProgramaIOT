@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "author": "Germán Andrés Xander",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": -60.67,
+      "left": -18.66,
+      "attrs": { "env": "micropython-20230426-v1.20.0" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -20.73,
+      "left": 169.06,
+      "rotate": 180,
+      "attrs": { "color": "black" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 35.69,
+      "left": 98.4,
+      "rotate": 90,
+      "attrs": { "value": "10000" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "esp:3V3", "btn1:1.r", "red", [ "v0.74", "h-114.87" ] ],
+    [ "btn1:2.r", "r1:1", "black", [ "h0" ] ],
+    [ "r1:2", "esp:GND.1", "black", [ "h0.25", "v17.84" ] ],
+    [ "esp:D23", "btn1:2.r", "white", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
