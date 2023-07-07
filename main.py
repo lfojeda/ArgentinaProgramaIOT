@@ -14,7 +14,7 @@ while True:
         contador+=1
         print(contador)     
     else:
-        if contador>3:
+        if contador>=3:
             print("Pulsacion larga")
         if 1<=contador<=2:
             print("Pulsacion corta")  
