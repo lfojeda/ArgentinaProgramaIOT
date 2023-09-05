@@ -13,7 +13,7 @@ estado = False
 temperaturas = []
 humedades = []
 
-def alternar(pin):
+def registrar(pin):
     global contador, estado
     if sw.value():            
             led.value(True)
@@ -46,7 +46,7 @@ def alternar(pin):
 
 
 timer1 = Timer(1)
-timer1.init(period=50, mode=Timer.PERIODIC, callback=alternar)
+timer1.init(period=50, mode=Timer.PERIODIC, callback=registrar)
 
 while True:
     time.sleep(1)
