@@ -1,52 +1,52 @@
 # Luis Fernando Ojeda - 2023
-from machine import Pin, Timer
+from machine import Pin, Timer, unique_id
 import dht
 import time
 import json
+import ubinascii
+from collections import OrderedDict
+from settings import SERVIDOR_MQTT
+from umqtt.robust import MQTTClient
 
-sw = Pin(23, Pin.IN)
+CLIENT_ID = ubinascii.hexlify(unique_id()).decode('utf-8')
+
+mqtt = MQTTClient(CLIENT_ID, SERVIDOR_MQTT,
+                  port=8883, keepalive=10, ssl=True)
+
 led = Pin(2, Pin.OUT)
 d = dht.DHT22(Pin(25))
-print("Esperando la primera pulsación...")
 contador = 0
-estado = False
-temperaturas = []
-humedades = []
 
-def registrar(pin):
-    global contador, estado
-    if sw.value():            
-            led.value(True)
-            contador += 1
-            print(f'Pulsación {contador}')
-            d.measure()
-            temperatura = d.temperature()
-            humedad = d.humidity()
-            if contador == 1:
-                # Primera pulsación: tomar temperatura y humedad
-                print(f'Temperatura: {temperatura}°C, Humedad: {humedad}%')
-                temperaturas.append(temperatura)
-                humedades.append(humedad)
-            elif contador == 2:
-                # Segunda pulsación: tomar temperatura y humedad y
-                # calcular el promedio y imprimirlo
-                print(f'Temperatura: {temperatura}°C, Humedad: {humedad}%')
-                temperaturas.append(temperatura)
-                humedades.append(humedad)
-                if temperaturas and humedades:
-                    promedio_temp = sum(temperaturas) / len(temperaturas)
-                    promedio_hum = sum(humedades) / len(humedades)
-                    print(f'Promedio de Temperatura: {promedio_temp:.2f}°C, Promedio de Humedad: {promedio_hum:.2f}%')
-                else:
-                    print("No se tomaron lecturas en la primera pulsación.")
-                contador = 0
-                temperaturas.clear()
-                humedades.clear()
-            led.value(False)
+def heartbeat(nada):
+    global contador
+    if contador > 5:
+        pulsos.deinit()
+        contador = 0
+        return
+    led.value(not led.value())
+    contador += 1
+  
+def transmitir(pin):
+    print("publicando")
+    mqtt.connect()
+    mqtt.publish(f"ap/{CLIENT_ID}",datos)
+    mqtt.disconnect()
+    pulsos.init(period=150, mode=Timer.PERIODIC, callback=heartbeat)
 
-
-timer1 = Timer(1)
-timer1.init(period=50, mode=Timer.PERIODIC, callback=registrar)
+publicar = Timer(0)
+publicar.init(period=30000, mode=Timer.PERIODIC, callback=transmitir)
+pulsos = Timer(1)
 
 while True:
-    time.sleep(1)
+    try:
+        d.measure()
+        temperatura = d.temperature()
+        humedad = d.humidity()
+        datos = json.dumps(OrderedDict([
+            ('temperatura',temperatura),
+            ('humedad',humedad)
+        ]))
+        print(datos)
+    except OSError as e:
+        print("sin sensor")
+    time.sleep(5)
