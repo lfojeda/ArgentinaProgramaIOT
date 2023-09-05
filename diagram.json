@@ -6,27 +6,16 @@
     {
       "type": "wokwi-esp32-devkit-v1",
       "id": "esp",
-      "top": -60.67,
-      "left": -18.66,
+      "top": -40.67,
+      "left": -193.33,
       "attrs": { "env": "micropython-20230426-v1.20.0" }
     },
-<<<<<<< Updated upstream
-    {
-      "type": "wokwi-pushbutton",
-      "id": "btn1",
-      "top": -20.73,
-      "left": 169.06,
-      "rotate": 180,
-      "attrs": { "color": "black" }
-    },
-=======
     { "type": "wokwi-dht22", "id": "dht1", "top": -39.7, "left": 80.6, "attrs": {} },
->>>>>>> Stashed changes
     {
       "type": "wokwi-resistor",
       "id": "r1",
-      "top": 35.69,
-      "left": 98.4,
+      "top": 146.61,
+      "left": -61.33,
       "rotate": 90,
       "attrs": { "value": "10000" }
     },
@@ -49,12 +38,6 @@
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
     [ "esp:RX0", "$serialMonitor:TX", "", [] ],
-<<<<<<< Updated upstream
-    [ "esp:3V3", "btn1:1.r", "red", [ "v0.74", "h-114.87" ] ],
-    [ "btn1:2.r", "r1:1", "black", [ "h0" ] ],
-    [ "r1:2", "esp:GND.1", "black", [ "h0.25", "v17.84" ] ],
-    [ "esp:D23", "btn1:2.r", "white", [ "h0" ] ]
-=======
     [ "dht1:GND", "esp:GND.1", "black", [ "v0" ] ],
     [ "dht1:SDA", "r1:2", "blue", [ "v111.37", "h-137.08" ] ],
     [ "esp:3V3", "r1:1", "red", [ "v-0.6", "h60.86" ] ],
@@ -64,7 +47,6 @@
     [ "btn1:1.l", "r2:1", "black", [ "h0" ] ],
     [ "r2:2", "esp:GND.1", "black", [ "h-0.11", "v18.48" ] ],
     [ "btn1:2.l", "r1:1", "red", [ "h0" ] ]
->>>>>>> Stashed changes
   ],
   "dependencies": {}
 }
